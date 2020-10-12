@@ -42,7 +42,8 @@ function ScoreBoard(props) {
 
 function PlayAgain(props) { 
   return (
-    <button onClick={() => props.reset(true)}>
+    <button onClick={() => 
+        props.reset(true)}>
         Play Again
     </button>
   )
@@ -80,6 +81,15 @@ function PlayAgain(props) {
       }
     }, [props.again, props.reset]);
 
+    useEffect(() => {
+      if (props.again) {
+        setCount(0);
+        props.start();
+      }
+    }, [props.again, props.start]);
+
+    console.log("repeat:")
+    console.log(repeat)
     return (
       <> 
     <ScoreBoard score={count}/>
@@ -109,8 +119,9 @@ export default function App() {
         <div>
             <button onClick={reset}> New </button>
         </div>
-        <PlayAgain reset={setisReset}/>
-        <Game pause={pause} reset={reset} again={isReset}/>
+        <PlayAgain reset={setisReset} />
+        <Game pause={pause} reset={reset} start={start} again={isReset}/>
+
         
     </React.Fragment>)
     }
