@@ -3,7 +3,9 @@ import { Canvas, useFrame, useLoader } from 'react-three-fiber'
 import { Html, draco } from 'drei'
 import './styles.css'
 import {gameOver, generatePosition, checkScore} from './game'
+import Instructions from './components/Instructions'
 import Timer from 'react-compound-timer'
+import { Container, Row, Col, Button, Jumbotron } from 'react-bootstrap'
 
 function Box(props) {
   // This reference will give us direct access to the mesh
@@ -33,19 +35,23 @@ function Box(props) {
 
 function ScoreBoard(props) { 
   return (
-    <div> 
-      <h1> Total Score: {props.score}</h1>
-    </div>
+    <Container>
+    <Row className="justify-content-md-center">
+      <Col md="auto">
+        Total Score: {props.score}
+      </Col>
+    </Row>
+    </Container>
   )
 }
 
 
 function PlayAgain(props) { 
   return (
-    <button onClick={() => 
+    <Button onClick={() => 
         props.reset(true)}>
         Play Again
-    </button>
+    </Button>
   )
 }
 
@@ -61,6 +67,7 @@ function PlayAgain(props) {
       setShowBox(!showBox)
       setCount(count + 1)
     }
+
 
     useEffect(() => {
       if (count === 10) {
@@ -86,9 +93,6 @@ function PlayAgain(props) {
       }
     }, [props.again, props.reset]);
 
-
-    console.log("repeat:")
-    console.log(repeat)
     return (
       <> 
     <ScoreBoard score={count}/>
@@ -108,28 +112,58 @@ function PlayAgain(props) {
     )
   }
 
+
 export default function App() {
   const [isReset, setisReset] = React.useState(false);
+  const [isNew, setisNew] = React.useState(true);
   return (
-    <Timer initialTime={0}>
+    <>
+    {!isNew ? (<Timer initialTime={0}>
       {({ start, resume, pause, stop, reset})  => (
       
       <React.Fragment>
-        <div>
+        <Container>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
             <Timer.Seconds /> seconds, 
             <Timer.Milliseconds /> milliseconds
-        </div>
-        <div>
-            <button onClick={reset}> New </button>
-        </div>
-        <PlayAgain reset={setisReset} />
-        <Game pause={pause} reset={reset} start={start} again={isReset} change={setisReset}/>
+            </Col>
+            <Col md="auto">
+            </Col>
+          </Row>
+        </Container>
+        <Container>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <PlayAgain reset={setisReset} />
+            </Col>
+          </Row>
+        </Container>
+        <Game pause={pause} reset={reset} 
+              start={start} again={isReset} 
+              change={setisReset}   />
         
         
     </React.Fragment>)
     }
-    </Timer>
-   
+    </Timer>) : 
+      <Container>
+        <Jumbotron >
+          <h1>AimTesting: A Simple Game to practice mouse aim</h1>
+          <p> As a way to learn some React, Three.js and help improve my aim, 
+              I created this aim-clicking game. 
+          </p>
+          <p>
+        <Instructions/>
+          </p>
+        </Jumbotron>
+        <Row className="justify-content-md-center">
+            <Col md="auto">
+            <Button onClick = {() => setisNew(false)}> New Game </Button>
+            </Col>
+        </Row>
+      </Container>}
+    </>
   )
 }
 
