@@ -51,6 +51,8 @@ function PlayAgain(props) {
 
 
   function Game(props) { 
+    console.log("Play again?")
+    console.log(props.again)
     const [showBox, setShowBox] = React.useState(true)
     const [count, setCount] = useState(0)
     const [repeat, setRepeat] = useState(1)
@@ -77,30 +79,31 @@ function PlayAgain(props) {
     useEffect(() => {
       if (props.again) {
         setCount(0);
+        setRepeat(1);
         props.reset();
+        props.change(false);
+        props.start();
       }
     }, [props.again, props.reset]);
 
-    useEffect(() => {
-      if (props.again) {
-        setCount(0);
-        props.start();
-      }
-    }, [props.again, props.start]);
 
     console.log("repeat:")
     console.log(repeat)
     return (
       <> 
     <ScoreBoard score={count}/>
+    <Canvas>
       {gameOver(count) && repeat ?
-      (<Canvas>
+      (
+        <mesh>
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
         <pointLight position={[-10, -10, -10]} /> 
         {showBox && <Box onClick={handleClick} position={generatePosition()} />}
         {!showBox && <Box onClick={handleClick} position={generatePosition()} />}
-      </Canvas>)  : (<div> <h1> Game Over!</h1></div>) }
+        </mesh>
+        ) : null }
+        </Canvas>
       </>
     )
   }
@@ -120,8 +123,8 @@ export default function App() {
             <button onClick={reset}> New </button>
         </div>
         <PlayAgain reset={setisReset} />
-        <Game pause={pause} reset={reset} start={start} again={isReset}/>
-
+        <Game pause={pause} reset={reset} start={start} again={isReset} change={setisReset}/>
+        
         
     </React.Fragment>)
     }
