@@ -6,6 +6,7 @@ import {gameOver, generatePosition, checkScore} from './game'
 import Instructions from './components/Instructions'
 import Timer from 'react-compound-timer'
 import { Container, Row, Col, Button, Jumbotron } from 'react-bootstrap'
+import axios from 'axios';
 
 function Box(props) {
   // This reference will give us direct access to the mesh
@@ -13,7 +14,6 @@ function Box(props) {
 
   // Set up state for the hovered for colour change 
   const [hovered, setHover] = useState(false)
-
 
   // Rotate mesh every frame, this is outside of React without overhead
   useFrame(() => {
@@ -53,6 +53,16 @@ function PlayAgain(props) {
         Play Again
     </Button>
   )
+}
+
+function TopScores(props) {
+  <Container>
+    <Row className="justify-content-md-center">
+      <Col md="auto">
+        All Scores {props.score}
+      </Col>
+    </Row>
+    </Container>
 }
 
 
@@ -132,6 +142,9 @@ export default function App() {
             </Col>
           </Row>
         </Container>
+        <Game pause={pause} reset={reset} 
+              start={start} again={isReset} 
+              change={setisReset}   />
         <Container>
           <Row className="justify-content-md-center">
             <Col md="auto">
@@ -139,9 +152,6 @@ export default function App() {
             </Col>
           </Row>
         </Container>
-        <Game pause={pause} reset={reset} 
-              start={start} again={isReset} 
-              change={setisReset}   />
         
         
     </React.Fragment>)
