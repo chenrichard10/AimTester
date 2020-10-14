@@ -56,13 +56,31 @@ function PlayAgain(props) {
 }
 
 function TopScores(props) {
+  const [scoreData, setScoreData] = useState(0);
+
+  useEffect(() => {
+  axios.get('http://localhost:5000/api/scores')
+  .then(function (response) {
+    // handle success
+    setScoreData(response.data[0].scores);
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .then(function () {
+    // always executed
+  });
+  },[]);
+  return(
   <Container>
     <Row className="justify-content-md-center">
       <Col md="auto">
-        All Scores {props.score}
+        {"Top Scores:" + scoreData}
       </Col>
     </Row>
     </Container>
+  )
 }
 
 
@@ -128,6 +146,7 @@ export default function App() {
   const [isNew, setisNew] = React.useState(true);
   return (
     <>
+    
     {!isNew ? (<Timer initialTime={0}>
       {({ start, resume, pause, stop, reset})  => (
       
@@ -158,6 +177,7 @@ export default function App() {
     }
     </Timer>) : 
       <Container>
+        <TopScores/>
         <Jumbotron >
           <h1>AimTesting: A Simple Game to practice mouse aim</h1>
           <p> As a way to learn some React, Three.js and help improve my aim, 
