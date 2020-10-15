@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect} from 'react'
 import { Canvas, useFrame, useLoader } from 'react-three-fiber'
-import { Html, draco } from 'drei'
 import './styles.css'
 import {gameOver, generatePosition, checkScore} from './game'
 import Instructions from './components/Instructions'
 import Timer from 'react-compound-timer'
 import { Container, Row, Col, Button, Jumbotron } from 'react-bootstrap'
 import axios from 'axios';
+
+const GROUND_HEIGHT = -50;
 
 function Box(props) {
   // This reference will give us direct access to the mesh
@@ -53,6 +54,31 @@ function PlayAgain(props) {
         Play Again
     </Button>
   )
+}
+
+function Terrain() {
+  const terrain = useRef();
+
+  useFrame(() => {
+    terrain.current.position.z += 0.4;
+  });
+  return (
+    <mesh
+      visible
+      position={[0, GROUND_HEIGHT, 0]}
+      rotation={[-Math.PI / 2, 0, 0]}
+      ref={terrain}
+    >
+      <planeBufferGeometry attach="geometry" args={[5000, 5000, 128, 128]} />
+      <meshStandardMaterial
+        attach="material"
+        color="white"
+        roughness={1}
+        metalness={0}
+        wireframe
+      />
+    </mesh>
+  );
 }
 
 function TopScores(props) {
@@ -125,6 +151,7 @@ function TopScores(props) {
       <> 
     <ScoreBoard score={count}/>
     <Canvas>
+      <Terrain></Terrain>
       {gameOver(count) && repeat ?
       (
         <mesh>
@@ -149,7 +176,6 @@ export default function App() {
     
     {!isNew ? (<Timer initialTime={0}>
       {({ start, resume, pause, stop, reset})  => (
-      
       <React.Fragment>
         <Container>
           <Row className="justify-content-md-center">
